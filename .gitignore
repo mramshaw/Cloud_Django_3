@@ -1,0 +1,7 @@
+# The next two lines could also be done as:
+# *.py[co]
+*.pyc
+*.pyo
+
+# This is from Writing_Django_3
+polls/
