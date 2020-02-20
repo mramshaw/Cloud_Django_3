@@ -1,6 +1,7 @@
 # Cloud_Django_3
 
 [![Known Vulnerabilities](https://snyk.io/test/github/mramshaw/Cloud_Django_3/badge.svg?style=plastic&targetFile=requirements.txt)](https://snyk.io/test/github/mramshaw/Cloud_Django_3?style=plastic&targetFile=requirements.txt)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
 This project follows on from my [Writing_Django_3](https://github.com/mramshaw/Writing_Django_3) project, which is a simple Hello World in Django 3.
 
@@ -160,3 +161,4 @@ From:
 ## To Do
 
 - [ ] Benchmark Django 3 ASGI performance against Django 3 WSGI performance
+- [x] Add a badge for `Black` formatting style
