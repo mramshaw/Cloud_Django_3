@@ -14,7 +14,10 @@ Specifically, it is a [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_In
 
 The plan of attack is as follows:
 
-* [Install and test 'gunicorn'](https://github.com/mramshaw/Cloud_Django#gunicorn)
+* [Install and test 'gunicorn'](#gunicorn)
+* [Configure 'gunicorn'](#configure-gunicorn)
+* [Install and test 'uvicorn'](#uvicorn)
+* [Run 'uvicorn' behind 'gunicorn'](#uvicorn-behind-gunicorn)
 
 ## gunicorn
 
@@ -48,6 +51,8 @@ $ gunicorn polls.wsgi
 [2020-02-19 16:32:12 -0500] [16182] [INFO] Shutting down: Master
 $
 ```
+
+## Configure gunicorn
 
 Now we need to open up `gunicorn` with a `gunicorn.conf.py` file (for some reason,
 this config file needs to be tagged as a Python file). By default, `gunicorn` runs
@@ -92,6 +97,101 @@ $
 ```
 
 Okay, everything runs.
+
+## uvicorn
+
+To install locally:
+
+    $ pip3 install --user uvicorn
+
+Or simply use the `requirements.txt` file:
+
+    $ pip3 install --user -r requirements.txt
+
+Verify the version:
+
+```bash
+$ uvicorn --version
+Running uvicorn 0.11.3 with CPython 3.6.9 on Linux
+$
+```
+
+Lets see if it runs (this needs to be in the same folder as `manage.py`):
+
+```bash
+$ cd polls
+$ uvicorn polls.asgi:application
+INFO:     Started server process [7899]
+INFO:     Waiting for application startup.
+INFO:     ASGI 'lifespan' protocol appears unsupported.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+^CINFO:     Shutting down
+INFO:     Finished server process [7899]
+$
+```
+
+[Note that the `uvicorn` syntax differs slightly from the `gunicorn` syntax.]
+
+## uvicorn behind gunicorn
+
+The recommendation is to run `uvicorn` behind `gunicorn`.
+
+Even if it is not supplied, `gunicorn` will read `gunicorn.conf.py` (so it needs to be re-named).
+
+This should look as follows (using WSGI):
+
+```bash
+$ mv gunicorn.conf.py gunicorn.conf
+$ gunicorn polls.wsgi -k uvicorn.workers.UvicornWorker
+[2020-02-20 11:49:29 -0500] [9237] [INFO] Starting gunicorn 20.0.4
+[2020-02-20 11:49:29 -0500] [9237] [INFO] Listening at: http://127.0.0.1:8000 (9237)
+[2020-02-20 11:49:29 -0500] [9237] [INFO] Using worker: uvicorn.workers.UvicornWorker
+[2020-02-20 11:49:29 -0500] [9240] [INFO] Booting worker with pid: 9240
+[2020-02-20 16:49:29 +0000] [9240] [INFO] Started server process [9240]
+[2020-02-20 16:49:29 +0000] [9240] [INFO] Waiting for application startup.
+[2020-02-20 16:49:29 +0000] [9240] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2020-02-20 16:49:29 +0000] [9240] [INFO] Application startup complete.
+^C[2020-02-20 11:49:32 -0500] [9237] [INFO] Handling signal: int
+[2020-02-20 16:49:32 +0000] [9240] [INFO] Shutting down
+[2020-02-20 16:49:32 +0000] [9240] [INFO] Finished server process [9240]
+[2020-02-20 16:49:32 +0000] [9240] [INFO] Worker exiting (pid: 9240)
+[2020-02-20 11:49:32 -0500] [9237] [INFO] Shutting down: Master
+$
+```
+
+Okay, everything runs.
+
+[The `ASGI 'lifespan' protocol appears unsupported.` line is ___informational___, so can be ignored.]
+
+And again, this time with ASGI:
+
+```bash
+$ gunicorn polls.asgi -k uvicorn.workers.UvicornWorker
+[2020-02-20 12:52:37 -0500] [9524] [INFO] Starting gunicorn 20.0.4
+[2020-02-20 12:52:37 -0500] [9524] [INFO] Listening at: http://127.0.0.1:8000 (9524)
+[2020-02-20 12:52:37 -0500] [9524] [INFO] Using worker: uvicorn.workers.UvicornWorker
+[2020-02-20 12:52:37 -0500] [9527] [INFO] Booting worker with pid: 9527
+[2020-02-20 17:52:37 +0000] [9527] [INFO] Started server process [9527]
+[2020-02-20 17:52:37 +0000] [9527] [INFO] Waiting for application startup.
+[2020-02-20 17:52:37 +0000] [9527] [INFO] ASGI 'lifespan' protocol appears unsupported.
+[2020-02-20 17:52:37 +0000] [9527] [INFO] Application startup complete.
+^C[2020-02-20 12:52:40 -0500] [9524] [INFO] Handling signal: int
+[2020-02-20 17:52:40 +0000] [9527] [INFO] Shutting down
+[2020-02-20 17:52:41 +0000] [9527] [INFO] Finished server process [9527]
+[2020-02-20 17:52:41 +0000] [9527] [INFO] Worker exiting (pid: 9527)
+[2020-02-20 12:52:41 -0500] [9524] [INFO] Shutting down: Master
+$
+```
+
+Also fine.
+
+The `gunicorn.conf.py` config file may be reinstated as follows:
+
+```bash
+$ mv gunicorn.conf gunicorn.conf.py
+$
+```
 
 ## Reference
 
@@ -160,5 +260,6 @@ From:
 
 ## To Do
 
+- [ ] Investigate whether specifying WSGI or ASGI to `gunicorn` makes a difference
 - [ ] Benchmark Django 3 ASGI performance against Django 3 WSGI performance
 - [x] Add a badge for `Black` formatting style
