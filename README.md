@@ -133,6 +133,17 @@ $
 
 [Note that the `uvicorn` syntax differs slightly from the `gunicorn` syntax.]
 
+Or, to run with the 'lifespan' protocol disabled:
+
+```bash
+$ uvicorn polls.asgi:application --lifespan off
+INFO:     Started server process [9590]
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+^CINFO:     Shutting down
+INFO:     Finished server process [9590]
+$
+```
+
 ## uvicorn behind gunicorn
 
 The recommendation is to run `uvicorn` behind `gunicorn`.
