@@ -3,14 +3,25 @@
 [![Known Vulnerabilities](https://snyk.io/test/github/mramshaw/Cloud_Django_3/badge.svg?style=plastic&targetFile=requirements.txt)](https://snyk.io/test/github/mramshaw/Cloud_Django_3?style=plastic&targetFile=requirements.txt)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 
-This project follows on from my [Writing_Django_3](https://github.com/mramshaw/Writing_Django_3) project, which is a simple Hello World in Django 3.
+This project follows on from my [Writing_Django_3](http://github.com/mramshaw/Writing_Django_3) project, which is a simple Hello World in Django 3.
 
 [As might be expected, there were breaking changes between Django 2 and Django 3. So rather than upgrade my
- [Cloud_Django_2](https://github.com/mramshaw/Cloud_Django_2) repo, it seemed to be a better idea to create
+ [Cloud_Django_2](http://github.com/mramshaw/Cloud_Django_2) repo, it seemed to be a better idea to create
  the __polls__ app in Django 3 and proceed from there, this time with Django 3.]
 
-It will use [gunicorn](http://gunicorn.org/) which is a web server for [Django](https://docs.djangoproject.com/en/3.0/howto/deployment/wsgi/gunicorn/).
-Specifically, it is a [WSGI](https://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) server.
+It will use [gunicorn](http://gunicorn.org/) which is a web server for [Django](http://docs.djangoproject.com/en/3.0/howto/deployment/wsgi/gunicorn/).
+Specifically, it is a [WSGI](http://en.wikipedia.org/wiki/Web_Server_Gateway_Interface) server.
+
+One of the new features that Django 3 supports is [ASGI](http://asgi.readthedocs.io/en/latest/), which will
+be tested here with [uvicorn](http://www.uvicorn.org). ASGI is *supposed* to be faster than WSGI, although
+this remains to be tested. As is generally usual with these types of claims, it probably depends upon the
+specific workload.
+
+We will run `uvicorn` behind `gunicorn`:
+
+> For production deployments we recommend using gunicorn with the uvicorn worker class.
+
+From: http://www.uvicorn.org/#running-with-gunicorn
 
 The plan of attack is as follows:
 
@@ -197,6 +208,8 @@ $
 
 Also fine.
 
+[As `gunicorn` is a WSGI application, I believe specifying `.wsgi` is __probably__ correct.]
+
 The `gunicorn.conf.py` config file may be reinstated as follows:
 
 ```bash
@@ -219,6 +232,10 @@ How to use Django with Gunicorn: http://docs.djangoproject.com/en/3.0/howto/depl
 For a production implementation of ASGI, `uvicorn` is recommended.
 
 How to use Django with Uvicorn: http://docs.djangoproject.com/en/3.0/howto/deployment/asgi/uvicorn/
+
+#### Django Deployment Checklist
+
+Django has a nice utility for checking if the app is ready for deployment: http://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 #### Uvicorn
 
