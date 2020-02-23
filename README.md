@@ -17,6 +17,11 @@ be tested here with [uvicorn](http://www.uvicorn.org). ASGI is *supposed* to be 
 this remains to be tested. As is generally usual with these types of claims, it probably depends upon the
 specific workload.
 
+[For an explanation of why ASGI should be faster than WSGI,
+ [this article](http://towardsdatascience.com/a-better-way-for-asynchronous-programming-asyncio-over-multi-threading-3457d82b3295)
+ is worth a read. The benchmarking code will be transparent to anyone with recent experience with `node.js` (i.e. async/await experience).
+ While I would personally take issue with the way the benchmarks are run, the results appear conclusive.]
+
 We will run `uvicorn` behind `gunicorn`:
 
 > For production deployments we recommend using gunicorn with the uvicorn worker class.
