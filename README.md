@@ -226,6 +226,16 @@ $
 
 Some useful references follow.
 
+#### asyncio
+
+For more on Coroutines and Tasks: http://docs.python.org/3/library/asyncio-task.html
+
+Sleep: http://docs.python.org/3/library/asyncio-task.html#sleeping
+
+Timeouts: http://docs.python.org/3/library/asyncio-task.html#timeouts
+
+[Note that this is a __Python 3__ library.]
+
 #### Django with Gunicorn
 
 For a production implementation of Django (WSGI or ASGI), `gunicorn` is recommended.
